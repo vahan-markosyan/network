@@ -9,7 +9,7 @@ import {
     MDBInput,
 }
     from 'mdb-react-ui-kit';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { InputUser } from '../../lib/types';
 import { handleSigneUp } from '../../lib/api';
 import { useForm } from 'react-hook-form';
@@ -20,6 +20,7 @@ export function Signup() {
     
     const [error, setError] = useState<string>("")
     const {register, handleSubmit, formState:{errors}, reset} = useForm<InputUser>()
+    const navigate = useNavigate()
     
 
     // const handleSubmit = (event:React.FormEvent<HTMLFormElement>) => {
@@ -48,6 +49,8 @@ export function Signup() {
                 } else {
                     console.log(data)
                     reset()
+                    navigate("/login")
+                    
                 }
             })
             .catch(error => {

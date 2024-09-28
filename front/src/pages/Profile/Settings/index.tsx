@@ -2,17 +2,17 @@ import { MDBCard, MDBCardBody, MDBCardImage, MDBCol, MDBContainer, MDBInput, MDB
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
-import { NewPassword, NewLogin } from "../../../../lib/types"
-import { changePassword, changeLogin } from "../../../../lib/api"
+import { ILogin, IPassword } from "../../../lib/types"
+import { handleChangePassword, handleChangeLogin } from "../../../lib/api"
 
 export const Settings = () => {
     const [error, setError] = useState<string>("")
-    const { register, handleSubmit, formState: { errors }, reset } = useForm<NewPassword>()
-    const { register: registerLogin, handleSubmit: handleSubmitLogin, formState: { errors: errorsLogin }, reset: resetLogin } = useForm<NewLogin>()  //es pahy ???
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<IPassword>()
+    const { register: registerLogin, handleSubmit: handleSubmitLogin, formState: { errors: errorsLogin }, reset: resetLogin } = useForm<ILogin>()  //es pahy ???
     const navigate = useNavigate()
 
-    const handleChangePassword = (data: NewPassword) => {
-        changePassword(data)
+    const ChangePassword = (data: IPassword) => {
+        handleChangePassword(data)
             .then(response => {
                 if (response.status === "error" && response.message) {
                     setError(response.message)
@@ -28,8 +28,8 @@ export const Settings = () => {
             })
     }
 
-    const handleChangeLogin = (data: NewLogin) => {
-        changeLogin(data)
+    const ChangeLogin = (data: ILogin) => {
+        handleChangeLogin(data)
             .then(response => {
                 if (response.status === "error" && response.message) {
                     setError(response.message)
@@ -55,26 +55,27 @@ export const Settings = () => {
                             <MDBCardBody className='px-5'>
                                 <h3 className="mb-4 pb-2 pb-md-0 mb-md-5 px-md-2">Change Your Password</h3>
                                 {error && <p style={{ color: 'red' }}>{error}</p>}
-                                <form onSubmit={handleSubmit(handleChangePassword)}>
-                                    <MDBInput
-                                        wrapperClass='mb-4'
-                                        label='Old Password'
-                                        type='password'
-                                        {...register("oldpwd", { required: "Please fill your old password" })}
-                                    />
-                                    {errors.oldpwd && <p style={{ color: "red" }}>{errors.oldpwd.message}</p>}
-                                    <MDBInput
+                                <form onSubmit={handleSubmit(ChangePassword)}>
+                                <MDBInput
                                         wrapperClass='mb-4'
                                         label='New Password'
                                         type='password'
                                         {...register("newpwd", { required: "Please fill your new password" })}
                                     />
                                     {errors.newpwd && <p style={{ color: "red" }}>{errors.newpwd.message}</p>}
+                                    <MDBInput
+                                        wrapperClass='mb-4'
+                                        label='Old Password'
+                                        type='password'
+                                        {...register("old", { required: "Please fill your old password" })}
+                                    />
+                                    {errors.old && <p style={{ color: "red" }}>{errors.old.message}</p>}
+                                    
                                     <button type='submit' className='btn btn-outline-info'>Change Password</button>
                                 </form>
 
                                 <h3 className="mt-5 mb-4 pb-2 pb-md-0 mb-md-5 px-md-2">Change Your Login</h3>
-                                <form onSubmit={handleSubmitLogin(handleChangeLogin)}>
+                                <form onSubmit={handleSubmitLogin(ChangeLogin)}>
                                     <MDBInput
                                         wrapperClass='mb-4'
                                         label='Current Password'
@@ -86,9 +87,9 @@ export const Settings = () => {
                                         wrapperClass='mb-4'
                                         label='New Login'
                                         type='text'
-                                        {...registerLogin("newlogin", { required: "Please fill your new login" })}
+                                        {...registerLogin("login", { required: "Please fill your new login" })}
                                     />
-                                    {errorsLogin.newlogin && <p style={{ color: "red" }}>{errorsLogin.newlogin.message}</p>}
+                                    {errorsLogin.login && <p style={{ color: "red" }}>{errorsLogin.login.message}</p>}
                                     <button type='submit' className='btn btn-outline-info'>Change Login</button>
                                 </form>
                             </MDBCardBody>

@@ -22,7 +22,7 @@ export interface IResponse {
 
 export interface IWideUser extends IUSER{
     followers:IUSER[]
-    followings:IUSER[]
+    following:IUSER[]
 }
 
 export interface IContextType {
@@ -30,12 +30,12 @@ export interface IContextType {
     setAccount: (user:IWideUser) => void
 }
 
-export interface NewPassword {
-    oldpwd:string,
-    newpwd:string
+export interface IPassword {
+    newpwd:string,
+    old:string
 }
 
-export interface NewLogin {
+export interface ILogin {
     password:string
-    newlogin:string
+    login:string
 }

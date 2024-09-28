@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IResponse, InputUser, LoginUser, NewLogin, NewPassword } from "./types";
+import { ILogin, IPassword, IResponse, InputUser, LoginUser } from "./types";
 
 const Axios = axios.create({
     baseURL:"http://localhost:4002",
@@ -26,13 +26,23 @@ export const handleLogOut = async():Promise<IResponse> => {
     return response.data
 }
 
-export const changePassword = async(data: NewPassword): Promise<IResponse> => {
+export const handleChangePassword = async(data: IPassword): Promise<IResponse> => {
     const response = await Axios.patch("/update/password", data)
     return response.data
 }
 
-export const changeLogin = async(data: NewLogin): Promise<IResponse> => {
+export const handleChangeLogin = async(data: ILogin): Promise<IResponse> => {
     const response = await Axios.patch("/update/login", data)
+    return response.data
+}
+
+export const handlePictureUpload = async(data:FormData): Promise<IResponse> => {
+    const response = await Axios.patch("/profile/upload", data)
+    return response.data
+}
+
+export const handleCoverUpload = async(data:FormData): Promise<IResponse> => {
+    const response = await Axios.patch("/cover/upload", data)
     return response.data
 }
 
