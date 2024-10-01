@@ -39,3 +39,13 @@ export interface ILogin {
     password:string
     login:string
 }
+
+export interface IPost {
+    id:number
+    title:string
+    picture:string
+}
+
+export interface IAccount extends IUSER {
+    posts?:IPost[]
+}

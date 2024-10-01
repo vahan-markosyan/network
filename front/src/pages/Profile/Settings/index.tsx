@@ -3,10 +3,11 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import { ILogin, IPassword } from "../../../lib/types"
-import { handleChangePassword, handleChangeLogin } from "../../../lib/api"
+import { handleChangePassword, handleChangeLogin, handlePrivate } from "../../../lib/api"
 
 export const Settings = () => {
     const [error, setError] = useState<string>("")
+    const [isPrivate, setIsPrivate] = useState<boolean>(false)
     const { register, handleSubmit, formState: { errors }, reset } = useForm<IPassword>()
     const { register: registerLogin, handleSubmit: handleSubmitLogin, formState: { errors: errorsLogin }, reset: resetLogin } = useForm<ILogin>()  //es pahy ???
     const navigate = useNavigate()
@@ -42,6 +43,24 @@ export const Settings = () => {
             .catch(error => {
                 console.error("Error while changing login", error)
                 setError("Error during login change")
+            })
+    }
+
+    const Status = () => {
+        const formData = new FormData()
+        formData.append("status", isPrivate ? "public" : "private")
+
+        handlePrivate(formData)
+            .then(response => {
+                if (response.status === "error") {
+                    setError(response.message as any)
+                } else {
+                    setIsPrivate(!isPrivate)
+                }
+            })
+            .catch(error => {
+                console.error("Error while changing account status", error)
+                setError("Error during account status change")
             })
     }
 
@@ -92,6 +111,15 @@ export const Settings = () => {
                                     {errorsLogin.login && <p style={{ color: "red" }}>{errorsLogin.login.message}</p>}
                                     <button type='submit' className='btn btn-outline-info'>Change Login</button>
                                 </form>
+                                <h3 className="mt-5 mb-4">Change Account Status</h3>
+                                <div onClick={Status} style={{ cursor: 'pointer' }}>
+                                <img
+                                    src={isPrivate ? "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/lock-64.png" : "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/lock-open-64.png"}
+                                    alt={isPrivate ? "Private Account" : "Public Account"}
+                                    style={{ width: '50px', height: '50px' }}
+                                />
+                                <p>{isPrivate ? "Private Account" : "Public Account"}</p>
+                            </div>
                             </MDBCardBody>
                         </MDBCard>
                     </MDBCol>
